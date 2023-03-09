@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "deepai": "^1.0.21",
+    "fs": "^0.0.1-security",
+    "got": "^11.8.0"
+  },
+  "name": "chapeltalk",
+  "version": "1.0.0",
+  "main": "AI.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Flint Rose",
+  "license": "ISC",
+  "keywords": [],
+  "description": "This is the website for my chapel talk",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Infurno108/ChapelTalk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Infurno108/ChapelTalk/issues"
+  },
+  "homepage": "https://github.com/Infurno108/ChapelTalk#readme"
+}

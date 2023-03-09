@@ -1,0 +1,16 @@
+<h1></h1>
+    <p1>*please note that I have no idea to actually read your responses*</p1>
+    <br>
+    <h3>Are you finished with your homework?</h3>
+    <button id = "Yes1" onclick="No1()">Yes</button>
+    <button id = "No1" onclick="Yes1()">No</button>
+    <br>
+    <br>
+    <p1 id = "first"></p1>
+    <br>
+    <h3 style = "visibility: hidden;" id = "Q2">How bored are you?</h3>
+    <button style = "visibility: hidden;" id = "Yes2" onclick="Yes2()">Very</button>
+    <button style = "visibility: hidden;" id = "No2" onclick="No2()">No I Have a Life</button>
+    <br>
+    <br>
+    <p1 id = "second"></p1>
