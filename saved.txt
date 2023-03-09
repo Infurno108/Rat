@@ -14,3 +14,27 @@
     <br>
     <br>
     <p1 id = "second"></p1>
+function Yes1()
+{
+    document.getElementById("first").innerHTML = "Well oh shit, what are you doing on this website? Go finish your homework.";
+
+}
+
+function No1()
+{
+    document.getElementById("first").innerHTML = "Oh? Well that means technically you are not doing anything imporant. So heres the follow up question:";
+    document.getElementById("Yes2").style.visibility = "visible";
+    document.getElementById("No2").style.visibility = "visible";
+    document.getElementById("Q2").style.visibility = "visible";
+
+}
+
+function Yes2()
+{
+    document.getElementById("second").innerHTML = "Well that is quite the coincidence, as Flint is also bored. He did chose to spend his time making this website after all, why dont you see what he is doing? Probably nothing. Paul is probably asleep. That damn lunatic. ";
+}
+
+function No2()
+{
+    document.getElementById("second").innerHTML = "Damn. Ok. Go live your life I guess and touch grass instead of talking to a website Flint made in an hour.";
+}
