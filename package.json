@@ -2,7 +2,8 @@
   "dependencies": {
     "deepai": "^1.0.21",
     "fs": "^0.0.1-security",
-    "got": "^11.8.0"
+    "got": "^11.8.0",
+    "openai": "^3.2.1"
   },
   "name": "chapeltalk",
   "version": "1.0.0",
@@ -14,7 +15,6 @@
   "license": "ISC",
   "keywords": [],
   "description": "This is the website for my chapel talk",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Infurno108/ChapelTalk.git"
