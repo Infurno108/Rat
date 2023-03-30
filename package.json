@@ -1,9 +1,12 @@
 {
   "dependencies": {
+    "brain.js": "^2.0.0-beta.20",
     "deepai": "^1.0.21",
     "fs": "^0.0.1-security",
     "got": "^11.8.0",
-    "openai": "^3.2.1"
+    "gpu.js": "^2.16.0",
+    "openai": "^3.2.1",
+    "synaptic": "^1.1.4"
   },
   "name": "chapeltalk",
   "version": "1.0.0",
