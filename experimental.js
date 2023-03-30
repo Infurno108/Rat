@@ -20,19 +20,38 @@ var XOR = new Network({ //even thought it is declared a net, you have to project
     output: outputLayer
 });
 
+new xorTrainer = new Trainer(XOR);
+
+var trainingset = [
+    {
+        input: [0, 0],
+        output: [0]
+    }
+]
+
 var inputs = [[0, 0], [0, 1], [1, 0], [1, 1]];
 var outputs = [[0], [1], [1], [0]]; // 0 1 1 0 
-
+/*
 for (var i = 0; i < 2000; i++) {
     for (var j = 0; j < 4; ++j) {
         XOR.activate(inputs[j]);
         XOR.propagate(learningRate, outputs[j]);
     }
 }
-
+*/
 for (var j = 0; j < 4; ++j) {
     console.log(XOR.activate(inputs[j]));
 }
+//now that my xor is finished u store it as a json
+
+var exported = XOR.toJSON();//I dont really undesrtand this rn
+
+
+//var xorFunction = XOR.standalone(); //this doesnt require the synapse library
+
+//console.log(xorFunction([0, 1]))
+
+
 
 //bim bam bam, wippy bam bam
 
