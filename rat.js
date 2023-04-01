@@ -1,19 +1,14 @@
 var synaptic = require('synaptic');
 var fs = require('fs');
 const learningRate = 0.3;
+const paul = fs.readFileSync('text/message.txt', error).toString();
 //Rat time. 
 //RNN , Recurrent Neural Network 
-
 
 function error(err, inputD) {
     if (err) throw err;
     return inputD;
 }
-
-var paul = fs.readFileSync('text/message.txt', error);
-
-paul = paul.toString()
-
 function trim(text) { //fully functionaly (as far as I can tell. Returns array full of all unique words contained in fed string.)
     var dictionary = [];
     var j = 0;
@@ -54,18 +49,9 @@ function trim(text) { //fully functionaly (as far as I can tell. Returns array f
     }
     return dictionary;
 }
+const localDictionary = trim(paul);
 
-console.log(trim(paul));
-
-function libraryCreate(text) {
-    for (var i = 0; i < text.length; i++) {
-        if (text[i] == ' ') {
-
-        }
-    }
-}
-
-//libraryCreate(paul);
+console.log(paul);
 
 
 var Neuron = synaptic.Neuron,

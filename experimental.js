@@ -19,7 +19,7 @@ var XOR = new Network({ //even thought it is declared a net, you have to project
     hidden: [invisibleLayer],
     output: outputLayer
 });
-
+7
 new xorTrainer = new Trainer(XOR);
 
 var trainingset = [
@@ -29,16 +29,17 @@ var trainingset = [
     }
 ]
 
+
 var inputs = [[0, 0], [0, 1], [1, 0], [1, 1]];
 var outputs = [[0], [1], [1], [0]]; // 0 1 1 0 
-/*
+
 for (var i = 0; i < 2000; i++) {
     for (var j = 0; j < 4; ++j) {
         XOR.activate(inputs[j]);
         XOR.propagate(learningRate, outputs[j]);
     }
 }
-*/
+
 for (var j = 0; j < 4; ++j) {
     console.log(XOR.activate(inputs[j]));
 }
