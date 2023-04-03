@@ -67,8 +67,34 @@ function dictionaryAdd(text) { //takes an array full of transfered words and ret
     return dictionary;
 }
 
-//console.log(dictionaryAdd(punc(paul)));
+function spaceDelete(text) { //takes an array and delets every space (just a brute force solution to a bug)
+    var returnArray = [];
+    var j = 0;
+    for (var i = 0; i < text.length; ++i) {
+        if (text[i] != ' ') {
+            returnArray[j++] = text[i];
+        }
+    }
+    return returnArray;
+}
+
+//console.log(spaceDelete(punc(paul)));
 var dictionary = dictionaryAdd(punc(paul));
+
+function roboTranslate(text, dictionary) { //takes an array full of words and returns an array full of dictionary number ==
+    var roboText = []
+    for (var i = 0; i < text.length; ++i) {
+        for (var j = 0; j < dictionary.length; ++j) {
+            if (dictionary[j] == text[i]) {
+                roboText[i] = j;
+                break;
+            }
+        }
+    }
+    return roboText;
+}
+
+console.log(roboTranslate(spaceDelete(punc(paul)), dictionary));
 
 /*
 function trim(text) { //fully functionaly (as far as I can tell. Returns array full of all unique words contained in fed string.)
