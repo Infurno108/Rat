@@ -1,7 +1,7 @@
 var synaptic = require('synaptic');
 var fs = require('fs');
 const learningRate = 0.3;
-const paul = fs.readFileSync('text/message.txt', error).toString();
+const paul = fs.readFileSync('text/message.txt', error).toString().toLowerCase();
 //Rat time. 
 //RNN , Recurrent Neural Network 
 
@@ -9,6 +9,68 @@ function error(err, inputD) {
     if (err) throw err;
     return inputD;
 }
+
+
+var testText = 'This. Is a decent test, of course I dont think its great? But like (butt) I think I need to kill the president. "Again?"';
+
+function punc(text) { //splits up input text to have spaces between , and . also removes all excessive punctuation and returns an array of each 'word'
+    var tail = 0;
+    var head = 0;
+    var returny = [];
+    var j = 0;
+    for (var i = 0; i < text.length; i++) {
+        switch (text[i]) {
+            case ';':
+            case '?':
+            case '(':
+            case ')':
+            case '"':
+            case '“':
+            case '”':
+            case "'":
+                text = text.substring(0, i) + text.substring(++i, text.length);
+                break;
+            case ' ':
+                tail = head;
+                head = i++;
+                returny[j++] = text.substring(tail, head);
+            case '.':
+            case ',':
+                tail = head;
+                head = i;
+                returny[j++] = text.substring(tail, head);
+
+                break;
+            default:
+                break;
+        }
+    }
+    return returny;
+}
+
+function dictionaryAdd(text) { //takes an array full of transfered words and returns list of each word present in list
+    var dictionary = [];
+    var u = 0;
+    var exit = 0;
+    for (var i = 0; i < text.length; ++i) {
+        for (var j = 0; j < dictionary.length; ++j) {
+            if (dictionary[j] == text[i]) {
+                exit = 1;
+            }
+            if (exit == 1) break;
+        }
+        if (exit == 0) {
+            dictionary[u++] = text[i];
+        }
+        exit = 0;
+    }
+    return dictionary;
+}
+
+//console.log(dictionaryAdd(punc(paul)));
+var dictionary = dictionaryAdd(punc(paul));
+
+/*
 function trim(text) { //fully functionaly (as far as I can tell. Returns array full of all unique words contained in fed string.)
     var dictionary = [];
     var j = 0;
@@ -40,8 +102,8 @@ function trim(text) { //fully functionaly (as far as I can tell. Returns array f
             case ';':
             case "'":
             case '"':
-                console.log(text[i]);
                 text = text.substring(0, i).concat(text.substring(i + 1, text.length));
+                console.log(text);
                 break;
             default:
                 break;
@@ -49,9 +111,10 @@ function trim(text) { //fully functionaly (as far as I can tell. Returns array f
     }
     return dictionary;
 }
-const localDictionary = trim(paul);
+*/
+//const localDictionary = trim(paul);
 
-console.log(paul);
+//console.log(localDictionary);
 
 
 var Neuron = synaptic.Neuron,
