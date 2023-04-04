@@ -102,7 +102,6 @@ function createData(text, dictionary) { //takes input of robotranslated text arr
                     output[u] = 0;
                 }
             }
-            console.log(output);
             trainingData[j++] =
             {
                 input: [text[i - 5], text[i - 4], text[i - 3], text[i - 2], text[i - 1]],
@@ -113,44 +112,63 @@ function createData(text, dictionary) { //takes input of robotranslated text arr
     return trainingData;
 }
 
-
 var dictionary = dictionaryAdd(punc(paul));
 
-var beepBoopPaul = roboTranslate(spaceDelete(punc(paul)), dictionary);
+var beepBoop = roboTranslate(spaceDelete(punc(paul)), dictionary);
 
+var input = 5;
+var blocks = 20;
+var output = dictionary.length;
+//layer init
+var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
+var inputGate = new Layer(blocks);
+var forgetGate = new Layer(blocks); //Blocks TBD
+var outputGate = new Layer(blocks);
+var cellState = new Layer(blocks);
+var outputLayer = new Layer(output); //output should be dictionary length
 
+//stores the information from the projection to cell state for future use
+var input = inputLayer.project(cellState);
+//Input needs to be connected to input(self), forget, and output
+inputLayer.project(inputGate);
+inputLayer.project(forgetGate);
+inputLayer.project(outputGate);
+//Storing data that is sent to output, also connection to output layer
+var output = cellState.project(outputLayer);
+//cell  state self connects, RNNing it up
+var self = cellState.project(cellState);
 
+//"peep holes", just inputing data from cell state into each NN
+cellState.project(inputGate);
+cellState.project(forgetGate);
+cellState.project(outputGate);
 
+inputGate.gate(input, Layer.gateType.INPUT);
+forgetGate.gate(self, Layer.gateType.ONE_TO_ONE);
+outputGate.gate(output, Layer.gateType.OUTPUT);
 
+inputLayer.project(outputLayer);
 
-
-
-var inputLayer = new Layer(5);
-var invisibleLayer0 = new Layer(20);
-var invisibleLayer1 = new Layer(20);
-var invisibleLayer2 = new Layer(20);
-var outputLayer = new Layer(695);
-
-inputLayer.project(invisibleLayer0, Layer.connectionType.ALL_TO_ALL);
-invisibleLayer0.project(invisibleLayer1, Layer.connectionType.ALL_TO_ALL);
-invisibleLayer1.project(invisibleLayer2, Layer.connectionType.ALL_TO_ALL);
-invisibleLayer2.project(outputLayer, Layer.connectionType.ALL_TO_ALL);
-
-var paulOnlyRNN = new Network({
+var rat = new Network({
     input: inputLayer,
-    hidden: [invisibleLayer0, invisibleLayer1, invisibleLayer2],
+    hidden: [inputGate, forgetGate, cellState, outputGate],
     output: outputLayer
 })
 
-var paulTraining = new Trainer(paulOnlyRNN);
+var ratTraining = new Trainer(rat);
 
-var paulTrainingData = createData(beepBoopPaul, dictionary);
+var trainingData = createData(beepBoop, dictionary);
 
-paulTraining.train(paulTrainingData);
+ratTraining.train(trainingData);
 
 //console.log(paulOnlyRNN.activate([0, 45, 7, 46, 5])); //47
 
-var log = paulOnlyRNN.activate([0, 45, 7, 46, 5]);
+
+var exported = rat.toJSON();
+
+fs.writeFile('rat.json', JSON.stringify(exported), 'utf8', error);
+
+var log = rat.activate([0, 45, 7, 46, 5]); //47
 var max = 0;
 var local = 0;
 for (var i = 0; i < log.length; ++i) {
