@@ -1,7 +1,5 @@
 var synaptic = require('synaptic');
 var fs = require('fs');
-const { train } = require('@tensorflow/tfjs');
-const { create } = require('domain');
 const learningRate = 0.3;
 const paul = fs.readFileSync('text/paulBorrego.txt', error).toString().toLowerCase();
 //Rat time. 
@@ -89,15 +87,26 @@ function roboTranslate(text, dictionary) { //takes an array full of words and re
     }
     return roboText;
 }
-function createData(text) { //takes input of robotranslated text array and returns 3d array containing [[5 words, next word],[...]]
+function createData(text, dictionary) { //takes input of robotranslated text array and returns 3d array containing [[5 words, next word],[...]]
     var trainingData = [{}];
     var j = 0;
+    var output = [];
     for (var i = 0; i < text.length; ++i) {
-        if (i > 5) {
+        var output = [];
+        if (i > 4) {
+            for (var u = 0; u < dictionary.length; ++u) {
+                if (u == i) {
+                    output[u] = 1;
+                }
+                else {
+                    output[u] = 0;
+                }
+            }
+            console.log(output);
             trainingData[j++] =
             {
                 input: [text[i - 5], text[i - 4], text[i - 3], text[i - 2], text[i - 1]],
-                output: [text[i]]
+                output: output
             }
         }
     }
@@ -109,7 +118,12 @@ var dictionary = dictionaryAdd(punc(paul));
 
 var beepBoopPaul = roboTranslate(spaceDelete(punc(paul)), dictionary);
 
-console.log(createData(beepBoopPaul));
+
+
+
+
+
+
 
 var inputLayer = new Layer(5);
 var invisibleLayer0 = new Layer(20);
@@ -128,6 +142,27 @@ var paulOnlyRNN = new Network({
     output: outputLayer
 })
 
-var paulTraining = new Trainer(paulOnlyRNN)
+var paulTraining = new Trainer(paulOnlyRNN);
 
-var paulTrainingData = [];
+var paulTrainingData = createData(beepBoopPaul, dictionary);
+
+paulTraining.train(paulTrainingData);
+
+//console.log(paulOnlyRNN.activate([0, 45, 7, 46, 5])); //47
+
+var log = paulOnlyRNN.activate([0, 45, 7, 46, 5]);
+var max = 0;
+var local = 0;
+for (var i = 0; i < log.length; ++i) {
+    if (log[i] > max) {
+        max = log[i];
+        local = i;
+    }
+    console.log(log[i]);
+    console.log(i);
+    console.log('////////');
+    console.log(local);
+}
+
+
+
