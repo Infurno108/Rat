@@ -1,3 +1,42 @@
+
+var fs = require('fs');
+
+const talks = fs.readFileSync('text/talks.txt', error).toString().toLowerCase();
+
+function error(err, inputD) {
+    if (err) throw err;
+    return inputD;
+}
+
+function textToArray(text) {
+    array = text.split(' '); //This, is, an, example., Alright,, lets, do, this.,
+    var temp;
+    for (var i = 0; i < array.length; ++i) {
+        temp = array[i].at(-1);
+        if (temp == ',') {
+            array[i] = array[i].substring(0, array[i].length - 1);
+            array.splice(i + 1, 0, ',');
+            ++i;
+        }
+        else if (temp == '.') {
+            array[i] = array[i].substring(0, array[i].length - 1);
+            array.splice(i + 1, 0, '.');
+            ++i;
+        }
+    }
+    for (var i = 0; i < array.length; ++i) {
+        array[i] = array[i].replace(/["'“”\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ");
+    }
+    return array;
+}
+
+console.log(textToArray(talks));
+
+
+
+/*
+
+
 var synaptic = require('synaptic')//here we go
 var fs = require('fs');
 var jsonFile = require('jsonfile');

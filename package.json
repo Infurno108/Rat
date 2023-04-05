@@ -7,6 +7,9 @@
     "got": "^11.8.0",
     "gpu.js": "^2.16.0",
     "jsonfile": "^6.1.0",
+    "math": "^0.0.3",
+    "Math": "^0.0.1-security",
+    "mathjs": "^11.8.0",
     "openai": "^3.2.1",
     "synaptic": "^1.1.4"
   },
