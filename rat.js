@@ -29,6 +29,10 @@ function roboTranslate(array, dictionary) { //takes an array full of words and r
             }
         }
     }
+
+    for (var i = 0; i < roboText.length; ++i) {
+        roboText[i] = (roboText[i] / 10000)
+    }
     return roboText;
 }
 function humanTranslate(array, dictionary) { //takes an array full of locals in dictionary, returns string with ' ' between each element.
@@ -38,23 +42,23 @@ function humanTranslate(array, dictionary) { //takes an array full of locals in 
     }
     return returnArray.join(' ')
 }
-function createData(array, dictionary) { //takes input of robotranslated array and returns 3d array containing [[5 words, next word],[...]]
+function createData(textArray, roboArray, dictionary) { //takes input of roboArray(local/library) and textArray (word,word,) returns 3d array containing [[0.x, 0.y],[0...1...0]]
     var trainingData = [{}];
     var j = 0;
     var temp = Array(dictionary.length).fill(0);
     var output = [];
+    var nextWord;
     for (var i = 0; i < dictionary.length; ++i) {
         temp[i] = 0;
     }
     for (var i = 10; i < array.length; ++i) {
-        temp[parseInt(array[i - 1])] = 0;
-        temp[parseInt(array[i])] = 1;
+        temp = Array(dictionary.length).fill(0);
+        temp[parseInt(dictionary.indexOf(textArray[i]))] = 1;
         output = [...temp];
         trainingData[j++] =
         {
-            input: [array[i - 10], array[i - 9], array[i - 8], array[i - 7], array[i - 6], array[i - 5], array[i - 4], array[i - 3], array[i - 2], array[i - 1]],
+            input: [roboArray[i - 10], roboArray[i - 9], roboArray[i - 8], roboArray[i - 7], roboArray[i - 6], roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
             output: output
-
         }
     }
     return trainingData;
@@ -72,9 +76,9 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     }
     return outputArray;
 }
-function trainNetwork(trainer, data, dictionary, nn) {
-    var trainingData = createData(beepBoop, dictionary);
-    console.log(`Started at: ${d.toLocaleTimeString()}`);
+function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
+    var trainingData = createData(iHuman, beepBoop, dictionary);
+    console.log(`Time: ${d.toLocaleTimeString()}`);
     console.log("Started training...");
     trainer.train(trainingData);
     console.log("...finished training.");
@@ -84,8 +88,9 @@ function trainNetwork(trainer, data, dictionary, nn) {
 function runNetwork(list, length) {
     var ratImport = fs.readFileSync('rat.json', 'utf8', error)
     var ratImported = Network.fromJSON(JSON.parse(ratImport));
+
     console.log('Generating text...');
-    var outputRobo = outputCreate(list0, 200, ratImported);
+    var outputRobo = outputCreate(list0, 20, ratImported);
     var outputText = humanTranslate(outputRobo, dictionary);
     return outputText;
 }
@@ -93,11 +98,13 @@ function runNetwork(list, length) {
 var arrayText = textToArray(talks);
 
 var dictionary = [...new Set(arrayText)];
+console.log(dictionary.length);
+var beepBoop = roboTranslate(array, dictionary)
 
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 10;
-var blocks = 10;
+var blocks = 56; //per 127 words add 1 block ~
 var output = (dictionary.length - 1);
 //layer init
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
@@ -151,11 +158,10 @@ console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
-trainNetwork(ratTraining, beepBoop, dictionary, rat);
+trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [0, 1, 2, 3, 0, 4, 5, 6, 7, 8];
 var list1 = [875, 36, 876, 30, 11, 70, 533, 877,];
+console.log('Dictionary length:', dictionary.length);
 
-console.log(runNetwork(list0, 200));
-
-
+//console.log(runNetwork(list0, 200));
