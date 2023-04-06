@@ -3,6 +3,7 @@ var fs = require('fs');
 var math = require('mathjs');
 const learningRate = 0.3;
 const talks = fs.readFileSync('text/talks.txt', error).toString().toLowerCase();
+const d = new Date();
 //Rat time. 
 var Neuron = synaptic.Neuron,
     Layer = synaptic.Layer,
@@ -14,8 +15,8 @@ function error(err, inputD) {
     if (err) throw err;
     return inputD;
 }
-function textToArray(text) {
-    text = text.replace(/[!?"'“”\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ");
+function textToArray(text) { //takes a string and returns array without punc and translated
+    text = text.replace(/[!?"'“.,”\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ");
     array = text.split(' ');
     return array;
 }
@@ -71,12 +72,33 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     }
     return outputArray;
 }
+function trainNetwork(trainer, data, dictionary, nn) {
+    var trainingData = createData(beepBoop, dictionary);
+    console.log(`Started at: ${d.toLocaleTimeString()}`);
+    console.log("Started training...");
+    trainer.train(trainingData);
+    console.log("...finished training.");
+    var exported = nn.toJSON();
+    fs.writeFile('rat.json', JSON.stringify(exported), 'utf8', error);
+}
+function runNetwork(list, length) {
+    var ratImport = fs.readFileSync('rat.json', 'utf8', error)
+    var ratImported = Network.fromJSON(JSON.parse(ratImport));
+    console.log('Generating text...');
+    var outputRobo = outputCreate(list0, 200, ratImported);
+    var outputText = humanTranslate(outputRobo, dictionary);
+    return outputText;
+}
+
+var arrayText = textToArray(talks);
+
+var dictionary = [...new Set(arrayText)];
 
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
-/*
+console.log("Constructing NN...");
 var input = 10;
-var blocks = 12;
-var output = dictionary.length;
+var blocks = 10;
+var output = (dictionary.length - 1);
 //layer init
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
 var inputGate = new Layer(blocks);
@@ -115,54 +137,25 @@ var rat = new Network({
 
 var ratTraining = new Trainer(rat, {
     learningRate: .1,
-    iterations: 100000,
-    shuffle: true,
+    iterations: 20000,
     log: 1000,
     schedule: {
-        every: 1, // repeat this task every 500 iterations
-        do: console.log('.')
+        every: 10,
+        do: function (data) {
+            console.log('Hi Flint, here is the iteration we are at: ', data.iterations, 'Oh yeah here is the rate as well: ', data.rate);
+        }
     }
 });
 
-/*
-var trainingData = createData(beepBoop, dictionary);
-
-ratTraining.train(trainingData);
-
-var exported = rat.toJSON();
-
-fs.writeFile('rat.json', JSON.stringify(exported), 'utf8', error);
-*/
-
-const ratImport = fs.readFileSync('rat.json', 'utf8', error)
-
-var ratImported = Network.fromJSON(JSON.parse(ratImport));
-
-var arrayText = textToArray(talks);
-
-var dictionary = [...new Set(arrayText)];
+console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
-var list = ([0, 1, 2, 3, 0, 4, 5, 6, 7, 8]);
+trainNetwork(ratTraining, beepBoop, dictionary, rat);
 
-var outputRobo = outputCreate(list, 200, ratImported);
+var list0 = [0, 1, 2, 3, 0, 4, 5, 6, 7, 8];
+var list1 = [875, 36, 876, 30, 11, 70, 533, 877,];
 
-var outputText = humanTranslate(outputRobo, dictionary);
-
-console.log(outputText);
+console.log(runNetwork(list0, 200));
 
 
-/*
-var test = ratImported.activate([3, 0, 4, 5, 6, 7, 8, 69, 0, 0]);
-var max = 0;
-var loc = 0;
-for (var i = 0; i < test.length; ++i) {
-    if (test[i] > max) {
-        loc = i;
-        max = test[i];
-    }
-}
-console.log(loc);
-
-*/
