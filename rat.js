@@ -123,7 +123,6 @@ var dictionary = [...new Set(arrayText)];
 
 var beepBoop = roboTranslate(array, dictionary)
 
-
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 10;
