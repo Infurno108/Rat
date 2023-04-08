@@ -168,6 +168,7 @@ var ratTraining = new Trainer(rat, {
     learningRate: .3,
     iterations: 20000,
     log: 1000,
+    shuffle: true,
     schedule: {
         every: 10,
         do: function (data) {
