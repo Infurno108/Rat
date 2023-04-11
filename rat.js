@@ -126,7 +126,7 @@ var beepBoop = roboTranslate(array, dictionary)
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 10;
-var blocks = 16; //per 42 dictionary add 1 block ~
+var blocks = 20; //per 42 dictionary add 1 block ~
 var output = (dictionary.length - 1);
 //layer init
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
@@ -148,9 +148,11 @@ var output = cellState.project(outputLayer);
 var self = cellState.project(cellState);
 
 //"peep holes", just inputing data from cell state into each NN
+/*
 cellState.project(inputGate);
 cellState.project(forgetGate);
 cellState.project(outputGate);
+*/
 
 inputGate.gate(input, Layer.gateType.INPUT);
 forgetGate.gate(self, Layer.gateType.ONE_TO_ONE);
@@ -181,10 +183,18 @@ console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
+console.log('Dictionary length:', dictionary.length);
+console.log('Array length:', arrayText.length);
+
 trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [1, 2, 3, 4, 1, 5, 6, 7, 8, 9];
 
-console.log('Dictionary length:', dictionary.length);
+//console.log('Dictionary length:', dictionary.length);
 
 //console.log(runNetwork(list0, 200));
+//per 136 on array add 10 seconds of training
+
+//236 seconds 4422w
+//100 seconds 2562w
+//375 seconds 6041w
