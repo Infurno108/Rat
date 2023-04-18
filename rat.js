@@ -16,7 +16,7 @@ function error(err, inputD) {
     return inputD;
 }
 function textToArray(text) { //takes a string and returns array without punc and translated
-    text = text.replace(/[!?1234567890"'“.,”\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+\n/g, " ");
+    text = text.replace(/[!?1234567890"'“,”\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+\n/g, " ");
     array = text.split(' ');
     return array;
 }
@@ -38,9 +38,17 @@ function roboTranslate(array, dictionary) { //takes an array full of words and r
 function humanTranslate(array, dictionary) { //takes an array full of locals in dictionary, returns string with ' ' between each element.
     var returnArray = [];
     var word;
+    var capital = 0;
     for (var i = 0; i < array.length; ++i) {
         word = dictionary[parseInt(array[i])]
+        if (capital = 1) {
+            word = word.charAt(0).toUpperCase() + word.slice(1);
+            capital = 0;
+        }
         returnArray.push(word);
+        if (array[i].at(-1) == '.') {
+            capital = 1;
+        }
     }
     return returnArray.join(' ')
 }
@@ -73,7 +81,7 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     for (var i = 0; i < size; ++i) {
         nextRun = NN.activate(array);
         lastWord = nextWord;
-        console.log(nextRun);
+        //console.log(nextRun);
         nextWord = nextRun.indexOf(threeMaxRand(nextRun));
         if (lastWord == nextWord) {
             nextWord = nextRun.indexOf(secondLargest(nextRun));
@@ -85,10 +93,10 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     return outputArray;
 }
 function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
-    console.log('Dictionary length:', dictionary.length);
+    console.log('Dictionary length:', dictionary.length); //1300: 209, 1335: 232, 1511: 332, 1600: 451
     console.log('Array length:', arrayText.length);
-    console.log('Estimated training time:', parseInt((((arrayText.length - 4816) / 136) * 10) + 315), "seconds,", parseInt(((((arrayText.length - 4816) / 136) * 10) + 315) / 60), "minutes.");
-    var trainingData = createData(iHuman, beepBoop, dictionary);
+    console.log('Estimated training time:', parseInt((((dictionary.length - 1300) / 100) * 80) + 209), "seconds,", parseInt((((dictionary.length - 1300) / 100) * 80) + 209) / 60, "minutes.");
+    var trainingData = createData(iHuman, beepBoop, dictionary); //per 100 dictionary lengths add 80 seconds
     console.log(`Time: ${d.toLocaleTimeString()}`);
     console.log("Started training...");
     trainer.train(trainingData);
@@ -169,7 +177,6 @@ console.log("Constructing NN...");
 var input = 5;
 var blocks = 18; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
-console.log("Number of blocks: ", blocks);
 //layer init
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
 var inputGate = new Layer(blocks);
@@ -217,7 +224,7 @@ var ratTraining = new Trainer(rat, {
     iterations: 20000,
     log: 1000,
     shuffle: true,
-    error: 0.999,
+    error: 0.9999,
     schedule: {
         every: 10,
         do: function (data) {
@@ -225,7 +232,6 @@ var ratTraining = new Trainer(rat, {
         }
     }
 });
-console.log(ratTraining.error);
 console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
@@ -233,7 +239,7 @@ var beepBoop = roboTranslate(arrayText, dictionary);
 trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [1, 2, 3, 4, 1];
-var list = inputCreate('my father decided to walk out of my life if ', dictionary);
+var list = inputCreate('i am an optimist. i ', dictionary);
 
 //console.log(runNetwork(list, 200));
 
