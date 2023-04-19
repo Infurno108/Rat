@@ -1,6 +1,42 @@
-.header {
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#header {
+    background: black;
+    width: 100%;
+    padding: 1px;
+    text-align: left;
+}
+
+#headerContent {
+    text-align: left;
+    margin: 0 auto;
+    color: white;
+    width: 200px;
+    font-size: 24px;
+}
+
+#Create {
+    margin-top: 15px;
+    background-color: black;
+    border: none;
+    color: white;
+    display: inline-block;
     text-align: center;
-    color: black;
-    background-color: white;
-    font-size: 20px;
+    padding: 32px;
+}
+
+.output {
+    text-align: center;
+}
+
+.ratGPT {
+    display: inline-block;
+    margin: 0 auto;
+    max-width: 150px;
 }

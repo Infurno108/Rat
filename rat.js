@@ -3,6 +3,7 @@ var fs = require('fs');
 var math = require('mathjs');
 const learningRate = 0.3;
 const talks = fs.readFileSync('text/talks.txt', error).toString().toLowerCase();
+const dictionaryText = fs.readFileSync('text/allTalks.txt', error).toString().toLowerCase();
 const d = new Date();
 //Rat time. 
 var Neuron = synaptic.Neuron,
@@ -38,17 +39,9 @@ function roboTranslate(array, dictionary) { //takes an array full of words and r
 function humanTranslate(array, dictionary) { //takes an array full of locals in dictionary, returns string with ' ' between each element.
     var returnArray = [];
     var word;
-    var capital = 0;
     for (var i = 0; i < array.length; ++i) {
         word = dictionary[parseInt(array[i])]
-        if (capital = 1) {
-            word = word.charAt(0).toUpperCase() + word.slice(1);
-            capital = 0;
-        }
         returnArray.push(word);
-        if (array[i].at(-1) == '.') {
-            capital = 1;
-        }
     }
     return returnArray.join(' ')
 }
@@ -58,16 +51,13 @@ function createData(textArray, roboArray, dictionary) { //takes input of roboArr
     var temp = Array(dictionary.length).fill(0);
     var output = [];
     var nextWord;
-    for (var i = 0; i < dictionary.length; ++i) {
-        temp[i] = 0;
-    }
-    for (var i = 10; i < array.length; ++i) {
+    for (var i = 10; i < textArray.length; ++i) {
         temp = Array(dictionary.length).fill(0);
         temp[parseInt(dictionary.indexOf(textArray[i]))] = 1;
         output = [...temp];
         trainingData[j++] =
-        { //
-            input: [roboArray[i - 10], roboArray[i - 9], roboArray[i - 8], roboArray[i - 7], roboArray[i - 6], roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
+        {
+            input: [roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
             output: output
         }
     }
@@ -82,6 +72,7 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
         nextRun = NN.activate(array);
         lastWord = nextWord;
         //console.log(nextRun);
+        console.log(nextRun);
         nextWord = nextRun.indexOf(threeMaxRand(nextRun));
         if (lastWord == nextWord) {
             nextWord = nextRun.indexOf(secondLargest(nextRun));
@@ -100,9 +91,9 @@ function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
     console.log(`Time: ${d.toLocaleTimeString()}`);
     console.log("Started training...");
     trainer.train(trainingData);
-    console.log("...finished training.");
     var exported = nn.toJSON();
     fs.writeFile('rat.json', JSON.stringify(exported), 'utf8', error);
+    console.log("...finished training.");
 }
 function runNetwork(list, length) {
     var ratImport = fs.readFileSync('rat.json', 'utf8', error)
@@ -165,17 +156,18 @@ function inputCreate(text, dictionary) {
     return returnArray;
 }
 
-
 var arrayText = textToArray(talks);
 
-var dictionary = [...new Set(arrayText)];
+var dictionaryArray = textToArray(dictionaryText);
 
-var beepBoop = roboTranslate(array, dictionary)
+var dictionary = [...new Set(dictionaryArray)];
+
+var beepBoop = roboTranslate(arrayText, dictionary)
 
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 5;
-var blocks = 18; //16 + (diclength - 677)/300
+var blocks = 20; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
 //layer init
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
@@ -220,7 +212,7 @@ var rat = new Network({
 })
 
 var ratTraining = new Trainer(rat, {
-    learningRate: .3,
+    rate: .3,
     iterations: 20000,
     log: 1000,
     shuffle: true,
@@ -240,8 +232,11 @@ trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [1, 2, 3, 4, 1];
 var list = inputCreate('i am an optimist. i ', dictionary);
+var list0 = inputCreate('oftentimes i believe myself to ', dictionary);
+var list2 = inputCreate('I was years old when ', dictionary);
+var list3 = inputCreate('throughout my life i have ', dictionary);
 
-//console.log(runNetwork(list, 200));
+//console.log(runNetwork(list, 400));
 
 //per 136 on array add 10 seconds of training
 
