@@ -17,7 +17,7 @@ function error(err, inputD) {
     return inputD;
 }
 function textToArray(text) { //takes a string and returns array without punc and translated
-    text = text.replace(/[!?1234567890"'“.,”\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+\n/g, " ");
+    text = text.replace(/[!?1234567890"'“,”\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+\n/g, " ");
     array = text.split(' ');
     return array;
 }
@@ -170,7 +170,7 @@ console.log('Array length:', arrayText.length);
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 5;
-var blocks = 18; //16 + (diclength - 677)/300
+var blocks = 19; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
 console.log("Number of blocks: ", blocks);
 //layer init
@@ -214,7 +214,11 @@ var rat = new Network({
     hidden: [inputGate, forgetGate, cellState, outputGate],
     output: outputLayer
 })
-
+/*
+var ratImport = fs.readFileSync('rat.json', 'utf8', error)
+var ratImported = Network.fromJSON(JSON.parse(ratImport));
+rat = ratImported;
+*/
 var ratTraining = new Trainer(rat, {
     learningRate: .3,
     iterations: 20000,
@@ -231,12 +235,12 @@ console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
-//trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
+trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [1, 2, 3, 4, 1];
-var list = inputCreate('my father decided to walk', dictionary);
+var list = inputCreate('throughout my life i have ', dictionary);
 
-console.log(runNetwork(list, 200));
+//console.log(runNetwork(list, 200));
 
 //per 136 on array add 10 seconds of training
 
