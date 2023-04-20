@@ -72,7 +72,6 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
         nextRun = NN.activate(array);
         lastWord = nextWord;
         //console.log(nextRun);
-        console.log(nextRun);
         nextWord = nextRun.indexOf(threeMaxRand(nextRun));
         if (lastWord == nextWord) {
             nextWord = nextRun.indexOf(secondLargest(nextRun));
@@ -84,9 +83,10 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     return outputArray;
 }
 function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
+    var timeRatio = 5.319444;
     console.log('Dictionary length:', dictionary.length); //1300: 209, 1335: 232, 1511: 332, 1600: 451
     console.log('Array length:', arrayText.length);
-    console.log('Estimated training time:', parseInt((((dictionary.length - 1300) / 100) * 80) + 209), "seconds,", parseInt((((dictionary.length - 1300) / 100) * 80) + 209) / 60, "minutes.");
+    console.log('Estimated training time:', parseInt(arrayText.length) * timeRatio, "seconds,", parseInt((arrayText.length * timeRatio) / 60), "minutes.");
     var trainingData = createData(iHuman, beepBoop, dictionary); //per 100 dictionary lengths add 80 seconds
     console.log(`Time: ${d.toLocaleTimeString()}`);
     console.log("Started training...");
@@ -167,7 +167,7 @@ var beepBoop = roboTranslate(arrayText, dictionary)
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 5;
-var blocks = 20; //16 + (diclength - 677)/300
+var blocks = 18; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
 //layer init
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
@@ -182,7 +182,6 @@ var outputLayer = new Layer(output); //output should be dictionary length
 //stores the information from the projection to cell state for future use
 var input = inputLayer.project(cellState);
 
-
 //Input needs to be connected to input(self), forget, and output
 inputLayer.project(inputGate);
 inputLayer.project(forgetGate);
@@ -191,13 +190,6 @@ inputLayer.project(outputGate);
 var output = cellState.project(outputLayer);
 //cell  state self connects, RNNing it up
 var self = cellState.project(cellState);
-
-//"peep holes", just inputing data from cell state into each NN
-/*
-cellState.project(inputGate);
-cellState.project(forgetGate);
-cellState.project(outputGate);
-*/
 
 inputGate.gate(input, Layer.gateType.INPUT);
 forgetGate.gate(self, Layer.gateType.ONE_TO_ONE);
@@ -211,12 +203,14 @@ var rat = new Network({
     output: outputLayer
 })
 
-var ratTraining = new Trainer(rat, {
+var ratImport = fs.readFileSync('rat.json', 'utf8', error)
+var ratImported = Network.fromJSON(JSON.parse(ratImport));
+
+var ratTraining = new Trainer(ratImported, {
     rate: .3,
     iterations: 20000,
     log: 1000,
     shuffle: true,
-    error: 0.9999,
     schedule: {
         every: 10,
         do: function (data) {
@@ -228,7 +222,7 @@ console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
-trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
+trainNetwork(ratTraining, arrayText, beepBoop, dictionary, ratImported);
 
 var list0 = [1, 2, 3, 4, 1];
 var list = inputCreate('i am an optimist. i ', dictionary);
@@ -236,9 +230,12 @@ var list0 = inputCreate('oftentimes i believe myself to ', dictionary);
 var list2 = inputCreate('I was years old when ', dictionary);
 var list3 = inputCreate('throughout my life i have ', dictionary);
 
-//console.log(runNetwork(list, 400));
+//console.log(runNetwork(list, 50));
 
 //per 136 on array add 10 seconds of training
 
 //315 seconds 4816
 //
+
+
+//766.333 5 19 dic 144w
