@@ -84,8 +84,7 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
 }
 function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
     var timeRatio = 5.319444;
-    console.log('Dictionary length:', dictionary.length); //1300: 209, 1335: 232, 1511: 332, 1600: 451
-    console.log('Array length:', arrayText.length);
+
     console.log('Estimated training time:', parseInt(arrayText.length) * timeRatio, "seconds,", parseInt((arrayText.length * timeRatio) / 60), "minutes.");
     var trainingData = createData(iHuman, beepBoop, dictionary); //per 100 dictionary lengths add 80 seconds
     console.log(`Time: ${d.toLocaleTimeString()}`);
@@ -163,7 +162,8 @@ var dictionaryArray = textToArray(dictionaryText);
 var dictionary = [...new Set(dictionaryArray)];
 
 var beepBoop = roboTranslate(arrayText, dictionary)
-
+console.log('Dictionary length:', dictionary.length); //1300: 209, 1335: 232, 1511: 332, 1600: 451
+console.log('Array length:', arrayText.length);
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 5;
@@ -178,7 +178,7 @@ var outputGate = new Layer(blocks);
 outputGate.squash = Neuron.squash.TANH;
 var cellState = new Layer(blocks);
 var outputLayer = new Layer(output); //output should be dictionary length
-
+console.log("...layers created...");
 //stores the information from the projection to cell state for future use
 var input = inputLayer.project(cellState);
 
@@ -190,21 +190,18 @@ inputLayer.project(outputGate);
 var output = cellState.project(outputLayer);
 //cell  state self connects, RNNing it up
 var self = cellState.project(cellState);
-
+console.log("...layers created...");
 inputGate.gate(input, Layer.gateType.INPUT);
 forgetGate.gate(self, Layer.gateType.ONE_TO_ONE);
 outputGate.gate(output, Layer.gateType.OUTPUT);
 
 inputLayer.project(outputLayer);
-
+console.log("...layers projected...");
 var rat = new Network({
     input: inputLayer,
     hidden: [inputGate, forgetGate, cellState, outputGate],
     output: outputLayer
 })
-
-var ratImport = fs.readFileSync('rat.json', 'utf8', error)
-var ratImported = Network.fromJSON(JSON.parse(ratImport));
 
 var ratTraining = new Trainer(ratImported, {
     rate: .3,
