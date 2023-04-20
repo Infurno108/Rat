@@ -3,6 +3,7 @@ var fs = require('fs');
 var math = require('mathjs');
 const learningRate = 0.3;
 const talks = fs.readFileSync('text/talks.txt', error).toString().toLowerCase();
+const allTalks = fs.readFileSync('text/allTalks.txt', error).toString().toLowerCase();
 const d = new Date();
 //Rat time. 
 var Neuron = synaptic.Neuron,
@@ -59,7 +60,7 @@ function createData(textArray, roboArray, dictionary) { //takes input of roboArr
         output = [...temp];
         trainingData[j++] =
         { //
-            input: [roboArray[i - 10], roboArray[i - 9], roboArray[i - 8], roboArray[i - 7], roboArray[i - 6], roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
+            input: [roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
             output: output
         }
     }
@@ -85,8 +86,7 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     return outputArray;
 }
 function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
-    console.log('Dictionary length:', dictionary.length);
-    console.log('Array length:', arrayText.length);
+
     console.log('Estimated training time:', parseInt((((arrayText.length - 4816) / 136) * 10) + 315), "seconds,", parseInt(((((arrayText.length - 4816) / 136) * 10) + 315) / 60), "minutes.");
     var trainingData = createData(iHuman, beepBoop, dictionary);
     console.log(`Time: ${d.toLocaleTimeString()}`);
@@ -159,10 +159,14 @@ function inputCreate(text, dictionary) {
 
 
 var arrayText = textToArray(talks);
+var arrayAll = textToArray(allTalks);
 
-var dictionary = [...new Set(arrayText)];
+var dictionary = [...new Set(arrayAll)];
 
 var beepBoop = roboTranslate(array, dictionary)
+
+console.log('Dictionary length:', dictionary.length);
+console.log('Array length:', arrayText.length);
 
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
@@ -217,7 +221,6 @@ var ratTraining = new Trainer(rat, {
     iterations: 20000,
     log: 1000,
     shuffle: true,
-    error: 0.999,
     schedule: {
         every: 10,
         do: function (data) {
@@ -225,7 +228,6 @@ var ratTraining = new Trainer(rat, {
         }
     }
 });
-console.log(ratTraining.error);
 console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
