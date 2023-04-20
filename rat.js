@@ -164,10 +164,11 @@ var dictionary = [...new Set(dictionaryArray)];
 var beepBoop = roboTranslate(arrayText, dictionary)
 console.log('Dictionary length:', dictionary.length); //1300: 209, 1335: 232, 1511: 332, 1600: 451
 console.log('Array length:', arrayText.length);
+/*
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 5;
-var blocks = 18; //16 + (diclength - 677)/300
+var blocks = 19; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
 //layer init
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
@@ -190,7 +191,6 @@ inputLayer.project(outputGate);
 var output = cellState.project(outputLayer);
 //cell  state self connects, RNNing it up
 var self = cellState.project(cellState);
-console.log("...layers created...");
 inputGate.gate(input, Layer.gateType.INPUT);
 forgetGate.gate(self, Layer.gateType.ONE_TO_ONE);
 outputGate.gate(output, Layer.gateType.OUTPUT);
@@ -202,6 +202,9 @@ var rat = new Network({
     hidden: [inputGate, forgetGate, cellState, outputGate],
     output: outputLayer
 })
+*/
+var ratImport = fs.readFileSync('rat.json', 'utf8', error)
+var ratImported = Network.fromJSON(JSON.parse(ratImport));
 
 var ratTraining = new Trainer(ratImported, {
     rate: .3,
@@ -235,4 +238,28 @@ var list3 = inputCreate('throughout my life i have ', dictionary);
 //
 
 
-//766.333 5 19 dic 144w
+
+
+
+//766.333s 19b 144w
+//
+/*
+Dictionary length: 1294
+Array length: 4816
+Constructing NN...
+Number of blocks:  18
+...NN constructed.
+Estimated training time: 315 seconds, 5 minutes.
+Time: 8:42:45 AM
+Started training...
+...finished training.
+
+
+1294:4816
+18
+
+5777:21,500
+80
+
+
+*/
