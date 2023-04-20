@@ -74,7 +74,6 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     for (var i = 0; i < size; ++i) {
         nextRun = NN.activate(array);
         lastWord = nextWord;
-        console.log(nextRun);
         nextWord = nextRun.indexOf(threeMaxRand(nextRun));
         if (lastWord == nextWord) {
             nextWord = nextRun.indexOf(secondLargest(nextRun));
@@ -232,12 +231,12 @@ console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
-trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
+//trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [1, 2, 3, 4, 1];
-var list = inputCreate('my father decided to walk out of my life if ', dictionary);
+var list = inputCreate('my father decided to walk', dictionary);
 
-//console.log(runNetwork(list, 200));
+console.log(runNetwork(list, 200));
 
 //per 136 on array add 10 seconds of training
 
