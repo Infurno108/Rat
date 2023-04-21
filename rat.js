@@ -178,7 +178,7 @@ console.log("Constructing NN...");
 var input = 5;
 var blocks = 18; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
-//layer init
+//layer init this is a test
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
 var inputGate = new Layer(blocks);
 var forgetGate = new Layer(blocks); //Blocks TBD
