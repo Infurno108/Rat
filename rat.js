@@ -71,9 +71,16 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     var nextRun;
     var nextWord = "";
     var lastWord;
+    var totalDingus = 0;
     for (var i = 0; i < size; ++i) {
         nextRun = NN.activate(array);
         lastWord = nextWord;
+        dingus = 0;
+        for (var j = 0; j < nextRun.length; ++j) {
+            if (nextRun[j] == 1) {
+                ++totalDingus;
+            }
+        }
         nextWord = nextRun.indexOf(threeMaxRand(nextRun));
         if (lastWord == nextWord) {
             nextWord = nextRun.indexOf(secondLargest(nextRun));
@@ -82,6 +89,7 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
         array.push(nextWord);
         array.shift();
     }
+    console.log("You totally encountered:", totalDingus, "dinguses");
     return outputArray;
 }
 function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
@@ -170,7 +178,7 @@ console.log('Array length:', arrayText.length);
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 5;
-var blocks = 19; //16 + (diclength - 677)/300
+var blocks = 18; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
 console.log("Number of blocks: ", blocks);
 //layer init
@@ -185,7 +193,6 @@ var outputLayer = new Layer(output); //output should be dictionary length
 
 //stores the information from the projection to cell state for future use
 var input = inputLayer.project(cellState);
-
 
 //Input needs to be connected to input(self), forget, and output
 inputLayer.project(inputGate);
@@ -220,8 +227,9 @@ var ratImported = Network.fromJSON(JSON.parse(ratImport));
 rat = ratImported;
 */
 var ratTraining = new Trainer(rat, {
-    learningRate: .3,
-    iterations: 20000,
+    learningRate: .00001,
+    iterations: 2000,
+    error: 0.005,
     log: 1000,
     shuffle: true,
     schedule: {
@@ -235,14 +243,18 @@ console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
-trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
+//trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [1, 2, 3, 4, 1];
 var list = inputCreate('throughout my life i have ', dictionary);
 
-//console.log(runNetwork(list, 200));
+console.log(runNetwork(list, 200));
 
 //per 136 on array add 10 seconds of training
 
 //315 seconds 4816
 //
+
+
+//62255 dingi @.1 error .3 LR
+//70625 dingi @.5 error .3 LR
