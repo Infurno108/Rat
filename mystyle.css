@@ -7,6 +7,12 @@ body {
     background-color: #d7d7d7;
 }
 
+.container {
+    display: grid;
+    
+    grid-template-columns: 1fr 1fr;
+}
+
 #header {
     column-gap: 5px;
     background: #131313;
@@ -24,14 +30,14 @@ body {
     font-size: 24px;
 }
 
-#container {
+.nonHeader {
     display: grid;
     align-items: center;
     grid-template-rows: 1fr 1fr;
 }
 
 #Create {
-    margin-top: 15px;
+    margin-top: 9px;
     background-color: #160f25;
     border: none;
     color: #d7d7d7;
@@ -39,14 +45,30 @@ body {
     padding: 32px;
     width: 200px;
     border-radius: 15px;
+    font-size: 20px;
+}
+
+#outputText {
+    font-size: 24px;
 }
 
 .rulesContainer {
-    margin-top: 15px;
+    margin-top: 1px;
     text-align: center;
     font-size: 30px;
 }
 
 .buttonContainer {
     text-align: center;
+}
+
+.outputContainer {
+    max-width: 500px;
+    min-width: 500px;
+    min-height: 500px;
+    margin: auto;
+    margin-top: 15px;
+    text-align: center;
+    outline: 5px solid #131313;
+
 }

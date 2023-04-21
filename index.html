@@ -10,26 +10,31 @@
 </head>
 
 <body>
-    <div id="header">
-        <div id="headerText">
-            <h1>RatGPT</h1>
+    <div class=container>
+        <div id="header">
+            <div id="headerText">
+                <h1>RatGPT</h1>
+            </div>
+        </div>
+
+        <div class="nonHeader">
+            <div class="rulesContainer">
+                <p1 id=rules>
+                    Press the button to generate a pharagraph <br>of an AI written chapel talk.
+                </p1>
+            </div>
+            <script src="index.js"></script>
+            <div class="buttonContainer">
+                <button id="Create" onclick="htmlRat()">Create</button>
+            </div>
+            <div class="outputContainer">
+                <p1 id="outputText">
+                    Dingus
+                </p1>
+            </div>
+
         </div>
     </div>
-
-    <div id="container">
-        <div class="rulesContainer">
-            <p1 id=rules>
-                Press the button to generate a pharagraph <br>of an AI written chapel talk.
-            </p1>
-        </div>
-        <script src="index.js"></script>
-        <div class="buttonContainer">
-            <button id="Create" onclick="htmlRat()">Create</button>
-        </div>
-
-    </div>
-
-
 </body>
 
 </html>

@@ -9,7 +9,8 @@ const d = new Date();
 var Neuron = synaptic.Neuron,
     Layer = synaptic.Layer,
     Network = synaptic.Network,
-    Trainer = synaptic.Trainer
+    Trainer = synaptic.Trainer,
+    Architect = synaptic.Architect
 //RNN , Recurrent Neural Network 
 
 function error(err, inputD) {
@@ -57,13 +58,13 @@ function createData(textArray, roboArray, dictionary) { //takes input of roboArr
         output = [...temp];
         trainingData[j++] =
         { //
-            input: [roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
+            input: [roboArray[i - 10], roboArray[i - 9], roboArray[i - 8], roboArray[i - 7], roboArray[i - 6], roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
             output: output
         }
     }
     return trainingData;
 }
-function outputCreate(array, size, NN) { // takes input of array of 10 robotranslated words, returns text of size
+function outputCreate(array, size, NN, dictionaryLength) { // takes input of array of 10 robotranslated words, returns text of size
     var outputArray = [...array];
     var nextRun;
     var nextWord = "";
@@ -73,6 +74,7 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
         nextRun = NN.activate(array);
         lastWord = nextWord;
         dingus = 0;
+        console.log(nextRun);
         for (var j = 0; j < nextRun.length; ++j) {
             if (nextRun[j] == 1) {
                 ++totalDingus;
@@ -80,7 +82,7 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
         }
         nextWord = nextRun.indexOf(threeMaxRand(nextRun));
         if (lastWord == nextWord) {
-            nextWord = nextRun.indexOf(secondLargest(nextRun));
+            nextWord = nextRun[Math.floor(Math.random() * dictionaryLength)];
         }
         outputArray.push(nextWord);
         array.push(nextWord);
@@ -100,11 +102,11 @@ function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
     fs.writeFile('rat.json', JSON.stringify(exported), 'utf8', error);
     console.log("...finished training.");
 }
-function runNetwork(list, length) {
+function runNetwork(list, length, dictionaryLength) {
     var ratImport = fs.readFileSync('rat.json', 'utf8', error)
     var ratImported = Network.fromJSON(JSON.parse(ratImport));
     console.log('Generating text...');
-    var outputRobo = outputCreate(list, length, ratImported);
+    var outputRobo = outputCreate(list, length, ratImported, dictionaryLength);
     var outputText = humanTranslate(outputRobo, dictionary);
     return outputText;
 }
@@ -129,8 +131,8 @@ function threeMaxRand(array) {
             }
         }
     }
-    var output = [one, one, one, two, two, three];
-    return output[Math.floor(Math.random() * 6)];
+    var output = [one, one, one, two, two, three, array[Math.floor(Math.random() * array.length)]];
+    return output[Math.floor(Math.random() * 7)];
 }
 function secondLargest(array) {
     var max = 0.0;
@@ -166,7 +168,7 @@ var arrayAll = textToArray(allTalks);
 
 var dictionary = [...new Set(arrayAll)];
 
-var dictionary = [...new Set(dictionaryArray)];
+var dictionary = [...new Set(array)];
 
 var beepBoop = roboTranslate(arrayText, dictionary)
 
@@ -174,71 +176,56 @@ console.log('Dictionary length:', dictionary.length);
 console.log('Array length:', arrayText.length);
 
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
+/*
 console.log("Constructing NN...");
-var input = 5;
-var blocks = 18; //16 + (diclength - 677)/300
+var input = 10;
+var blocks = 50; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
-//layer init this is a test
+
+//layer init 
 var inputLayer = new Layer(input); //Input, for now will be first 5 words that extend each step
-var inputGate = new Layer(blocks);
-var forgetGate = new Layer(blocks); //Blocks TBD
-forgetGate.squash = Neuron.squash.TANH;
-var outputGate = new Layer(blocks);
-outputGate.squash = Neuron.squash.TANH;
 var cellState = new Layer(blocks);
+var hiddenLayer0 = new Layer(blocks);
+var hiddenLayer1 = new Layer(blocks);
 var outputLayer = new Layer(output); //output should be dictionary length
 
 //stores the information from the projection to cell state for future use
-var input = inputLayer.project(cellState);
+inputLayer.project(cellState);
+inputLayer.project(hiddenLayer0);
+inputLayer.project(hiddenLayer1);
 
-//Input needs to be connected to input(self), forget, and output
-inputLayer.project(inputGate);
-inputLayer.project(forgetGate);
-inputLayer.project(outputGate);
 //Storing data that is sent to output, also connection to output layer
-var output = cellState.project(outputLayer);
+cellState.project(outputLayer);
 //cell  state self connects, RNNing it up
-var self = cellState.project(cellState);
+cellState.project(cellState);
 
-inputGate.gate(input, Layer.gateType.INPUT);
-forgetGate.gate(self, Layer.gateType.ONE_TO_ONE);
-outputGate.gate(output, Layer.gateType.OUTPUT);
+hiddenLayer0.project(outputLayer);
+hiddenLayer1.project(outputLayer);
 
-inputLayer.project(outputLayer);
 
 var rat = new Network({
     input: inputLayer,
-    hidden: [inputGate, forgetGate, cellState, outputGate],
+    hidden: [cellState, hiddenLayer0, hiddenLayer1],
     output: outputLayer
 })
 /*
 var ratImport = fs.readFileSync('rat.json', 'utf8', error)
 var ratImported = Network.fromJSON(JSON.parse(ratImport));
 rat = ratImported;
-*/
+
+
 var ratTraining = new Trainer(rat, {
-    learningRate: .00001,
-    iterations: 2000,
-    error: 0.005,
-    log: 1000,
-    shuffle: true,
-    schedule: {
-        every: 10,
-        do: function (data) {
-            console.log('Hi Flint, here is the iteration we are at: ', data.iterations, 'Oh yeah here is the rate as well: ', data.rate);
-        }
-    }
+    rate: .3
 });
 console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
-
+*/
 //trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
-var list0 = [1, 2, 3, 4, 1];
-var list = inputCreate('throughout my life i have ', dictionary);
+var list = inputCreate('throughout my life i have been given many different names. ', dictionary);
 
-console.log(runNetwork(list, 200));
+console.log(runNetwork(list, 200, dictionary.length));
 
 //per 136 on array add 10 seconds of training
 
