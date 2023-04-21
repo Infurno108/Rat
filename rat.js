@@ -3,11 +3,7 @@ var fs = require('fs');
 var math = require('mathjs');
 const learningRate = 0.3;
 const talks = fs.readFileSync('text/talks.txt', error).toString().toLowerCase();
-<<<<<<< HEAD
-const dictionaryText = fs.readFileSync('text/allTalks.txt', error).toString().toLowerCase();
-=======
 const allTalks = fs.readFileSync('text/allTalks.txt', error).toString().toLowerCase();
->>>>>>> openingOnly
 const d = new Date();
 //Rat time. 
 var Neuron = synaptic.Neuron,
@@ -60,11 +56,7 @@ function createData(textArray, roboArray, dictionary) { //takes input of roboArr
         temp[parseInt(dictionary.indexOf(textArray[i]))] = 1;
         output = [...temp];
         trainingData[j++] =
-<<<<<<< HEAD
-        {
-=======
         { //
->>>>>>> openingOnly
             input: [roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
             output: output
         }
@@ -80,16 +72,12 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     for (var i = 0; i < size; ++i) {
         nextRun = NN.activate(array);
         lastWord = nextWord;
-<<<<<<< HEAD
-        //console.log(nextRun);
-=======
         dingus = 0;
         for (var j = 0; j < nextRun.length; ++j) {
             if (nextRun[j] == 1) {
                 ++totalDingus;
             }
         }
->>>>>>> openingOnly
         nextWord = nextRun.indexOf(threeMaxRand(nextRun));
         if (lastWord == nextWord) {
             nextWord = nextRun.indexOf(secondLargest(nextRun));
@@ -102,17 +90,9 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     return outputArray;
 }
 function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
-<<<<<<< HEAD
-    var timeRatio = 5.319444;
-    console.log('Dictionary length:', dictionary.length); //1300: 209, 1335: 232, 1511: 332, 1600: 451
-    console.log('Array length:', arrayText.length);
-    console.log('Estimated training time:', parseInt(arrayText.length) * timeRatio, "seconds,", parseInt((arrayText.length * timeRatio) / 60), "minutes.");
-    var trainingData = createData(iHuman, beepBoop, dictionary); //per 100 dictionary lengths add 80 seconds
-=======
 
     console.log('Estimated training time:', parseInt((((arrayText.length - 4816) / 136) * 10) + 315), "seconds,", parseInt(((((arrayText.length - 4816) / 136) * 10) + 315) / 60), "minutes.");
     var trainingData = createData(iHuman, beepBoop, dictionary);
->>>>>>> openingOnly
     console.log(`Time: ${d.toLocaleTimeString()}`);
     console.log("Started training...");
     trainer.train(trainingData);
