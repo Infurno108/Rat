@@ -178,7 +178,7 @@ console.log('Array length:', arrayText.length);
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 5;
-var blocks = 18; //16 + (diclength - 677)/300
+var blocks = 30; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
 console.log("Number of blocks: ", blocks);
 //layer init
@@ -204,11 +204,11 @@ var output = cellState.project(outputLayer);
 var self = cellState.project(cellState);
 
 //"peep holes", just inputing data from cell state into each NN
-/*
+
 cellState.project(inputGate);
 cellState.project(forgetGate);
 cellState.project(outputGate);
-*/
+
 
 inputGate.gate(input, Layer.gateType.INPUT);
 forgetGate.gate(self, Layer.gateType.ONE_TO_ONE);
@@ -221,34 +221,24 @@ var rat = new Network({
     hidden: [inputGate, forgetGate, cellState, outputGate],
     output: outputLayer
 })
-/*
-var ratImport = fs.readFileSync('rat.json', 'utf8', error)
-var ratImported = Network.fromJSON(JSON.parse(ratImport));
-rat = ratImported;
-*/
+
+//var ratImport = fs.readFileSync('rat.json', 'utf8', error)
+//var ratImported = Network.fromJSON(JSON.parse(ratImport));
+//var rat = ratImported;
+
 var ratTraining = new Trainer(rat, {
-    learningRate: .00001,
-    iterations: 2000,
-    error: 0.005,
-    log: 1000,
     shuffle: true,
-    schedule: {
-        every: 10,
-        do: function (data) {
-            console.log('Hi Flint, here is the iteration we are at: ', data.iterations, 'Oh yeah here is the rate as well: ', data.rate);
-        }
-    }
 });
 console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
-//trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
+trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [1, 2, 3, 4, 1];
 var list = inputCreate('throughout my life i have ', dictionary);
 
-console.log(runNetwork(list, 200));
+//console.log(runNetwork(list, 200));
 
 //per 136 on array add 10 seconds of training
 
