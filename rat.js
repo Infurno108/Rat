@@ -60,7 +60,7 @@ function createData(textArray, roboArray, dictionary) { //takes input of roboArr
         output = [...temp];
         trainingData[j++] =
         { //
-            input: [roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
+            input: [roboArray[i - 10], roboArray[i - 9], roboArray[i - 8], roboArray[i - 7], roboArray[i - 6], roboArray[i - 5], roboArray[i - 4], roboArray[i - 3], roboArray[i - 2], roboArray[i - 1]],
             output: output
         }
     }
@@ -71,10 +71,17 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
     var nextRun;
     var nextWord = "";
     var lastWord;
+    var dingi = 0;
+    var bap = 0;
     for (var i = 0; i < size; ++i) {
         nextRun = NN.activate(array);
         lastWord = nextWord;
-        nextWord = nextRun.indexOf(threeMaxRand(nextRun));
+        bap = threeMaxRand(nextRun);
+        console.log(bap);
+        nextWord = nextRun.indexOf(bap);
+        if (bap == 1) {
+            ++dingi;
+        }
         if (lastWord == nextWord) {
             nextWord = nextRun.indexOf(secondLargest(nextRun));
         }
@@ -82,6 +89,7 @@ function outputCreate(array, size, NN) { // takes input of array of 10 robotrans
         array.push(nextWord);
         array.shift();
     }
+    console.log(dingi);
     return outputArray;
 }
 function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
@@ -169,8 +177,8 @@ console.log('Array length:', arrayText.length);
 
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
-var input = 5;
-var blocks = 19; //16 + (diclength - 677)/300
+var input = 10;
+var blocks = 50; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
 console.log("Number of blocks: ", blocks);
 //layer init
@@ -240,7 +248,7 @@ trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 var list0 = [1, 2, 3, 4, 1];
 var list = inputCreate('throughout my life i have ', dictionary);
 
-//console.log(runNetwork(list, 200));
+//console.log(runNetwork(list, 400));
 
 //per 136 on array add 10 seconds of training
 
