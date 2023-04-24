@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="mystyle.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RatGPT</title>
+    <script src="./src/index.js" defer></script>
+</head>
+
+<body>
+    <div id="header">
+        <div id="headerText">
+            <h1>RatGPT</h1>
+        </div>
+    </div>
+
+    <div id="container">
+        <div class="rulesContainer">
+            <p1 id=rules>
+                Press the button to generate a pharagraph <br>of an AI written chapel talk.
+            </p1>
+        </div>
+        <div class="buttonContainer">
+            <script src="main.js"></script>
+            <button type="button" id="Create" onclick="runNetwork(1,[1, 2, 3, 4, 1])">Create</button>
+        </div>
+        <p1 id="output">Bingus</p1>
+    </div>
+
+
+</body>
+
+</html>
