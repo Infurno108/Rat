@@ -11,7 +11,8 @@
     "Math": "^0.0.1-security",
     "mathjs": "^11.8.0",
     "openai": "^3.2.1",
-    "synaptic": "^1.1.4"
+    "synaptic": "^1.1.4",
+    "vercel": "^28.20.0"
   },
   "name": "chapeltalk",
   "version": "1.0.0",
