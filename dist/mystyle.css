@@ -44,6 +44,7 @@ body {
     padding: 32px;
     width: 200px;
     border-radius: 15px;
+    font-size: 20px;
 }
 
 #Create:hover {
@@ -71,4 +72,18 @@ body {
     font-size: 30px;
     margin-top: 15px;
     text-align: center;
+}
+
+.footer {
+    margin: 1px;
+}
+
+#copyright {
+    padding-left: 15px;
+}
+
+#github {
+
+    padding-right: 15px;
+    text-align: right;
 }
