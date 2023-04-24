@@ -178,7 +178,7 @@ console.log('Array length:', arrayText.length);
 //console.log(humaTranslate(['i', 'am', 'an', 'optimist.', 'i', 'like', 'to', 'look', 'on', 'the'], dictionary))
 console.log("Constructing NN...");
 var input = 10;
-var blocks = 50; //16 + (diclength - 677)/300
+var blocks = 30; //16 + (diclength - 677)/300
 var output = (dictionary.length - 1);
 console.log("Number of blocks: ", blocks);
 //layer init
