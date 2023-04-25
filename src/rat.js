@@ -103,7 +103,7 @@ function trainNetwork(trainer, iHuman, beepBoop, dictionary, nn) {
     fs.writeFile('rat.json', JSON.stringify(exported), 'utf8', error);
 }
 function runNetwork(list, length) {
-    var path = 'logs\0.txt'
+    var path = 'C:\code\ChapelTalk\logs\0.txt'
     var knowledge = 0;
     var ratImport = fs.readFileSync('rat.json', 'utf8', error)
     var ratImported = Network.fromJSON(JSON.parse(ratImport));
