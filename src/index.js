@@ -1,4 +1,4 @@
-var synaptic = require('synaptic');
+var fs = require('fs');
 var Network = synaptic.Network;
 
 const talks = fs.readFileSync('text/talks.txt', error).toString().toLowerCase();

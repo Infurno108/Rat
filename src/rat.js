@@ -2,8 +2,7 @@ var synaptic = require('synaptic');
 var fs = require('fs');
 var math = require('mathjs');
 const learningRate = 0.3;
-const talks = fs.readFileSync('text/talks.txt', error).toString().toLowerCase();
-const allTalks = fs.readFileSync('text/allTalks.txt', error).toString().toLowerCase();
+const allTalks = fs.readFileSync('/Users/flintrose/Code/ChapelTalk/ChapelTalk/text/allTalks.txt', error).toString().toLowerCase();
 const d = new Date();
 //Rat time. 
 var Neuron = synaptic.Neuron,
@@ -111,7 +110,7 @@ function runNetwork(list, length) {
     var outputRobo = outputCreate(list, length, ratImported);
     var outputText = humanTranslate(outputRobo, dictionary);
     console.log('Writing text...');
-    writeFile(path, outputText, error);
+    fs.writeFile(path, outputText, error);
     return outputText;
 }
 function threeMaxRand(array) {
@@ -158,14 +157,11 @@ function inputCreate(text, dictionary) {
     return returnArray;
 }
 
+var arrayText = textToArray(allTalks);
 
+var dictionary = [...new Set(arrayText)];
 
-var arrayText = textToArray(talks);
-var arrayAll = textToArray(allTalks);
-
-var dictionary = [...new Set(arrayAll)];
-
-var beepBoop = roboTranslate(array, dictionary)
+var beepBoop = roboTranslate(arrayText, dictionary)
 
 console.log('Dictionary length:', dictionary.length);
 console.log('Array length:', arrayText.length);
@@ -188,7 +184,6 @@ var outputLayer = new Layer(output); //output should be dictionary length
 
 //stores the information from the projection to cell state for future use
 var input = inputLayer.project(cellState);
-
 
 //Input needs to be connected to input(self), forget, and output
 inputLayer.project(inputGate);
@@ -238,12 +233,12 @@ console.log("...NN constructed.");
 
 var beepBoop = roboTranslate(arrayText, dictionary);
 
-//trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
+trainNetwork(ratTraining, arrayText, beepBoop, dictionary, rat);
 
 var list0 = [1, 2, 3, 4, 1];
 var list = inputCreate('i am an optimist. i like to look on the ', dictionary);
 
-console.log(runNetwork(list, 100));
+//console.log(runNetwork(list, 100));
 
 //per 136 on array add 10 seconds of training
 
