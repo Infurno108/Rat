@@ -1,2 +1,3 @@
 # ChapelTalk
-For my chapel talk in 2023. This repository contains all code used to create a language model using Synaptic.js.
+For my school speach in 2023. Included is video of speach.
+https://www.youtube.com/live/BGpsWfgNw0s?si=fuWgQKhWPpj4jSO_&t=986
